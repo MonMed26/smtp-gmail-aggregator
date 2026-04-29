@@ -25,18 +25,10 @@ app.set('views', path.join(__dirname, '..', 'views'));
 
 // Security middleware
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net", "https://fonts.googleapis.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
-      imgSrc: ["'self'", "data:"],
-      connectSrc: ["'self'"],
-      formAction: ["'self'"],
-    },
-  },
+  contentSecurityPolicy: false,         // Disable CSP — we load CDN resources (Bootstrap, fonts)
+  strictTransportSecurity: false,       // Disable HSTS — server runs on HTTP, not HTTPS
   crossOriginOpenerPolicy: false,
+  crossOriginResourcePolicy: false,
   originAgentCluster: false,
 }));
 

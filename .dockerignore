@@ -1,0 +1,10 @@
+node_modules
+dist
+data/*.db
+.env
+*.log
+.git
+.gitignore
+*.md
+test-smtp.php
+.kilo

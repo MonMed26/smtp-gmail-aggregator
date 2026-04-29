@@ -1,0 +1,81 @@
+<%- include('layouts/main') %>
+
+<% if (success) { %>
+  <div class="alert alert-success alert-dismissible fade show">
+    <i class="bi bi-check-circle me-1"></i> <%= success %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>
+
+<% if (error) { %>
+  <div class="alert alert-danger alert-dismissible fade show">
+    <i class="bi bi-exclamation-circle me-1"></i> <%= error %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+<% } %>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white border-bottom py-3">
+    <h6 class="mb-0 fw-semibold"><i class="bi bi-send me-1"></i> Compose Email</h6>
+  </div>
+  <div class="card-body">
+    <form method="POST" action="/send">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="to" class="form-label">To <span class="text-danger">*</span></label>
+          <input type="email" class="form-control" id="to" name="to" placeholder="recipient@example.com" required>
+        </div>
+        <div class="col-md-3">
+          <label for="cc" class="form-label">CC</label>
+          <input type="text" class="form-control" id="cc" name="cc" placeholder="cc@example.com">
+        </div>
+        <div class="col-md-3">
+          <label for="bcc" class="form-label">BCC</label>
+          <input type="text" class="form-control" id="bcc" name="bcc" placeholder="bcc@example.com">
+        </div>
+        <div class="col-md-8">
+          <label for="subject" class="form-label">Subject <span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="subject" name="subject" placeholder="Email subject" required>
+        </div>
+        <div class="col-md-4">
+          <label for="strategy" class="form-label">Strategy</label>
+          <select class="form-select" id="strategy" name="strategy">
+            <option value="round-robin">Round Robin</option>
+            <option value="least-used">Least Used</option>
+            <option value="random">Random</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label for="replyTo" class="form-label">Reply-To</label>
+          <input type="email" class="form-control" id="replyTo" name="replyTo" placeholder="reply@example.com">
+        </div>
+        <div class="col-12">
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#htmlTab" type="button">HTML Body</button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#textTab" type="button">Plain Text</button>
+            </li>
+          </ul>
+          <div class="tab-content border border-top-0 rounded-bottom p-3">
+            <div class="tab-pane fade show active" id="htmlTab">
+              <textarea class="form-control font-monospace" id="html" name="html" rows="10" placeholder="<h1>Hello!</h1><p>Your HTML email content here...</p>"></textarea>
+            </div>
+            <div class="tab-pane fade" id="textTab">
+              <textarea class="form-control" id="text" name="text" rows="10" placeholder="Plain text email content..."></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-send me-1"></i> Queue Email
+          </button>
+          <small class="text-muted ms-2">Email will be queued and sent by the background worker</small>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('layouts/footer') %>

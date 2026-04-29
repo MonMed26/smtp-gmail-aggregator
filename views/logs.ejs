@@ -1,0 +1,83 @@
+<%- include('layouts/main') %>
+
+<!-- Filters -->
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body py-2">
+    <form method="GET" action="/logs" class="d-flex gap-2 flex-wrap align-items-center">
+      <div class="input-group input-group-sm" style="max-width: 300px;">
+        <input type="text" class="form-control" name="search" placeholder="Search email or subject..." value="<%= search %>">
+        <button class="btn btn-outline-secondary" type="submit"><i class="bi bi-search"></i></button>
+      </div>
+      <a href="/logs" class="btn btn-sm <%= currentStatus === 'all' ? 'btn-primary' : 'btn-outline-secondary' %>">All</a>
+      <a href="/logs?status=sent" class="btn btn-sm <%= currentStatus === 'sent' ? 'btn-success' : 'btn-outline-success' %>">Sent</a>
+      <a href="/logs?status=failed" class="btn btn-sm <%= currentStatus === 'failed' ? 'btn-danger' : 'btn-outline-danger' %>">Failed</a>
+    </form>
+  </div>
+</div>
+
+<!-- Logs Table -->
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white border-bottom py-3">
+    <h6 class="mb-0 fw-semibold">Email Logs (<%= total %> total)</h6>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>To</th>
+            <th>Subject</th>
+            <th>Status</th>
+            <th>Account</th>
+            <th>Message ID</th>
+            <th>Sent At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (items.length === 0) { %>
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                No logs found
+              </td>
+            </tr>
+          <% } else { %>
+            <% items.forEach(function(item) { %>
+              <tr>
+                <td><small class="text-muted">#<%= item.id %></small></td>
+                <td class="fw-medium"><%= item.to_address %></td>
+                <td><%= item.subject.length > 35 ? item.subject.substring(0, 35) + '...' : item.subject %></td>
+                <td>
+                  <% if (item.status === 'sent') { %>
+                    <span class="badge bg-success-subtle text-success">Sent</span>
+                  <% } else { %>
+                    <span class="badge bg-danger-subtle text-danger" title="<%= item.error_message || '' %>">Failed</span>
+                  <% } %>
+                </td>
+                <td><small><%= item.account_email || 'N/A' %></small></td>
+                <td><small class="text-muted font-monospace"><%= item.message_id ? item.message_id.substring(0, 20) + '...' : '-' %></small></td>
+                <td><small class="text-muted"><%= new Date(item.sent_at).toLocaleString() %></small></td>
+              </tr>
+            <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <% if (pages > 1) { %>
+    <div class="card-footer bg-white">
+      <nav>
+        <ul class="pagination pagination-sm justify-content-center mb-0">
+          <% for (let i = 1; i <= pages; i++) { %>
+            <li class="page-item <%= i === page ? 'active' : '' %>">
+              <a class="page-link" href="/logs?page=<%= i %><%= currentStatus !== 'all' ? '&status=' + currentStatus : '' %><%= search ? '&search=' + search : '' %>"><%= i %></a>
+            </li>
+          <% } %>
+        </ul>
+      </nav>
+    </div>
+  <% } %>
+</div>
+
+<%- include('layouts/footer') %>

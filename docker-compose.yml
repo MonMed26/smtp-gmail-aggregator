@@ -1,0 +1,51 @@
+services:
+  aggregator:
+    build: .
+    container_name: smtp-gmail-aggregator
+    restart: unless-stopped
+    ports:
+      - "${PORT:-3000}:3000"             # HTTP Dashboard + API
+      - "${SMTP_SERVER_PORT:-587}:587"   # SMTP Server
+    volumes:
+      - aggregator-data:/app/data        # Persist SQLite database
+    environment:
+      # Server
+      - NODE_ENV=${NODE_ENV:-production}
+      - PORT=3000
+
+      # Database (inside container)
+      - DB_PATH=/app/data/aggregator.db
+
+      # Encryption
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:?Set ENCRYPTION_KEY in .env}
+
+      # API
+      - API_KEY=${API_KEY:?Set API_KEY in .env}
+
+      # Dashboard
+      - DASHBOARD_USER=${DASHBOARD_USER:-admin}
+      - DASHBOARD_PASS=${DASHBOARD_PASS:?Set DASHBOARD_PASS in .env}
+
+      # Session
+      - SESSION_SECRET=${SESSION_SECRET:?Set SESSION_SECRET in .env}
+
+      # Queue
+      - QUEUE_POLL_INTERVAL=${QUEUE_POLL_INTERVAL:-5000}
+      - QUEUE_BATCH_SIZE=${QUEUE_BATCH_SIZE:-10}
+
+      # Strategy
+      - DEFAULT_STRATEGY=${DEFAULT_STRATEGY:-round-robin}
+
+      # SMTP outgoing
+      - SMTP_TIMEOUT=${SMTP_TIMEOUT:-10000}
+      - SMTP_POOL_SIZE=${SMTP_POOL_SIZE:-5}
+
+      # SMTP Server (incoming relay)
+      - SMTP_SERVER_ENABLED=${SMTP_SERVER_ENABLED:-true}
+      - SMTP_SERVER_PORT=587
+      - SMTP_SERVER_USER=${SMTP_SERVER_USER:-aggregator}
+      - SMTP_SERVER_PASS=${SMTP_SERVER_PASS:?Set SMTP_SERVER_PASS in .env}
+      - SMTP_SERVER_MODE=${SMTP_SERVER_MODE:-direct}
+
+volumes:
+  aggregator-data:

@@ -1,0 +1,40 @@
+<nav class="sidebar bg-dark text-white d-flex flex-column" id="sidebar">
+  <div class="sidebar-header p-3 border-bottom border-secondary">
+    <h5 class="mb-0 fw-bold">
+      <i class="bi bi-envelope-fill text-primary me-2"></i>
+      SMTP Aggregator
+    </h5>
+  </div>
+  <ul class="nav flex-column p-2 flex-grow-1">
+    <li class="nav-item">
+      <a class="nav-link text-white-50 rounded <%= currentPage === 'dashboard' ? 'active bg-primary text-white' : '' %>" href="/">
+        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white-50 rounded <%= currentPage === 'accounts' ? 'active bg-primary text-white' : '' %>" href="/accounts">
+        <i class="bi bi-people me-2"></i> Accounts
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white-50 rounded <%= currentPage === 'send' ? 'active bg-primary text-white' : '' %>" href="/send">
+        <i class="bi bi-send me-2"></i> Send Email
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white-50 rounded <%= currentPage === 'queue' ? 'active bg-primary text-white' : '' %>" href="/queue">
+        <i class="bi bi-list-task me-2"></i> Queue
+      </a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-white-50 rounded <%= currentPage === 'logs' ? 'active bg-primary text-white' : '' %>" href="/logs">
+        <i class="bi bi-journal-text me-2"></i> Logs
+      </a>
+    </li>
+  </ul>
+  <div class="p-3 border-top border-secondary">
+    <a class="nav-link text-white-50 rounded" href="/logout">
+      <i class="bi bi-box-arrow-left me-2"></i> Logout
+    </a>
+  </div>
+</nav>

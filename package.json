@@ -1,0 +1,49 @@
+{
+  "name": "smtp-gmail-aggregator",
+  "version": "1.0.0",
+  "description": "Aggregate multiple Gmail accounts for higher SMTP sending limits",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "seed": "ts-node src/database/seed.ts"
+  },
+  "keywords": [
+    "smtp",
+    "gmail",
+    "aggregator",
+    "email"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "helmet": "^8.0.0",
+    "mailparser": "^3.9.8",
+    "nodemailer": "^6.9.16",
+    "smtp-server": "^3.18.4",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/cors": "^2.8.17",
+    "@types/ejs": "^3.1.5",
+    "@types/express": "^5.0.0",
+    "@types/express-session": "^1.18.1",
+    "@types/mailparser": "^3.4.6",
+    "@types/node": "^22.12.0",
+    "@types/nodemailer": "^6.4.17",
+    "@types/smtp-server": "^3.5.13",
+    "@types/uuid": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.3"
+  }
+}

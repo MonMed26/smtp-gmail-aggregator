@@ -3,6 +3,10 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Force install ALL dependencies (including devDependencies like typescript)
+# regardless of NODE_ENV passed by CI/CD platforms (e.g. Coolify)
+ENV NODE_ENV=development
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
@@ -14,6 +18,8 @@ RUN npx tsc
 FROM node:22-alpine
 
 WORKDIR /app
+
+ENV NODE_ENV=production
 
 # Install production dependencies only
 COPY package.json package-lock.json ./

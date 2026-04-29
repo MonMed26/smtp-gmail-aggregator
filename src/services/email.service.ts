@@ -27,11 +27,15 @@ export class EmailService {
     // Mark as processing
     EmailQueueModel.updateStatus(item.id, 'processing', undefined, account.id);
 
+    // Use custom from if provided, otherwise fall back to account info
+    const fromName = item.from_name || account.display_name || account.email.split('@')[0];
+    const fromAddress = item.from_address || account.email;
+
     // Send the email
     const result = await smtpPool.sendEmail(account, {
       from: {
-        name: account.display_name || account.email.split('@')[0],
-        address: account.email,
+        name: fromName,
+        address: fromAddress,
       },
       to: item.to_address,
       cc: item.cc || undefined,

@@ -7,11 +7,13 @@ export class EmailQueueModel {
     const db = getDatabase();
 
     const stmt = db.prepare(`
-      INSERT INTO email_queue (to_address, cc, bcc, subject, body_html, body_text, reply_to, attachments, strategy, priority, scheduled_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO email_queue (from_name, from_address, to_address, cc, bcc, subject, body_html, body_text, reply_to, attachments, strategy, priority, scheduled_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     const result = stmt.run(
+      input.fromName || null,
+      input.fromAddress || null,
       input.to,
       input.cc || null,
       input.bcc || null,

@@ -31,6 +31,8 @@ export interface AccountUpdateInput {
 
 export interface EmailQueueItem {
   id: number;
+  from_name: string | null;
+  from_address: string | null;
   to_address: string;
   cc: string | null;
   bcc: string | null;
@@ -53,6 +55,8 @@ export interface EmailQueueItem {
 
 export interface EmailQueueCreateInput {
   to: string;
+  fromName?: string;
+  fromAddress?: string;
   cc?: string;
   bcc?: string;
   subject: string;

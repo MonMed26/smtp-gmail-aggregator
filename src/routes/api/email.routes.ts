@@ -9,7 +9,7 @@ const router = Router();
 // POST /api/send - Queue a single email
 router.post('/send', sendRateLimiter, (req: Request, res: Response) => {
   try {
-    const { to, cc, bcc, subject, html, text, replyTo, strategy, priority, scheduledAt } = req.body;
+    const { to, fromName, fromAddress, cc, bcc, subject, html, text, replyTo, strategy, priority, scheduledAt } = req.body;
 
     // Validation
     if (!to || !subject) {
@@ -31,6 +31,8 @@ router.post('/send', sendRateLimiter, (req: Request, res: Response) => {
 
     const input: EmailQueueCreateInput = {
       to,
+      fromName,
+      fromAddress,
       cc,
       bcc,
       subject,

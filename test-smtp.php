@@ -7,10 +7,10 @@
  */
 
 // SMTP Config
-$smtpHost = 'localhost';
+$smtpHost = '192.168.222.5';
 $smtpPort = 587;
-$smtpUser = 'aggregator';
-$smtpPass = 'aggregator123';
+$smtpUser = 'medot';
+$smtpPass = '50223044';
 
 // Email Config
 $to      = 'monalisa.medot26@gmail.com';

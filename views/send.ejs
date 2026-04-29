@@ -21,6 +21,18 @@
   <div class="card-body">
     <form method="POST" action="/send">
       <div class="row g-3">
+        <div class="col-md-4">
+          <label for="fromName" class="form-label">From Name</label>
+          <input type="text" class="form-control" id="fromName" name="fromName" placeholder="My App (optional, uses account name if empty)">
+        </div>
+        <div class="col-md-4">
+          <label for="fromAddress" class="form-label">From Address</label>
+          <input type="email" class="form-control" id="fromAddress" name="fromAddress" placeholder="noreply@myapp.com (optional)">
+        </div>
+        <div class="col-md-4">
+          <label for="replyTo" class="form-label">Reply-To</label>
+          <input type="email" class="form-control" id="replyTo" name="replyTo" placeholder="reply@example.com">
+        </div>
         <div class="col-md-6">
           <label for="to" class="form-label">To <span class="text-danger">*</span></label>
           <input type="email" class="form-control" id="to" name="to" placeholder="recipient@example.com" required>
@@ -44,10 +56,6 @@
             <option value="least-used">Least Used</option>
             <option value="random">Random</option>
           </select>
-        </div>
-        <div class="col-md-6">
-          <label for="replyTo" class="form-label">Reply-To</label>
-          <input type="email" class="form-control" id="replyTo" name="replyTo" placeholder="reply@example.com">
         </div>
         <div class="col-12">
           <ul class="nav nav-tabs" role="tablist">

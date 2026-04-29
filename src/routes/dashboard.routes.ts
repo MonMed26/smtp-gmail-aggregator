@@ -185,7 +185,7 @@ router.get('/send', (req: Request, res: Response) => {
 // Send email POST
 router.post('/send', (req: Request, res: Response) => {
   try {
-    const { to, cc, bcc, subject, html, text, replyTo, strategy } = req.body;
+    const { to, fromName, fromAddress, cc, bcc, subject, html, text, replyTo, strategy } = req.body;
 
     if (!to || !subject || (!html && !text)) {
       res.render('send', {
@@ -197,7 +197,7 @@ router.post('/send', (req: Request, res: Response) => {
       return;
     }
 
-    EmailQueueModel.enqueue({ to, cc, bcc, subject, html, text, replyTo, strategy });
+    EmailQueueModel.enqueue({ to, fromName, fromAddress, cc, bcc, subject, html, text, replyTo, strategy });
 
     res.render('send', {
       title: 'Send Email',

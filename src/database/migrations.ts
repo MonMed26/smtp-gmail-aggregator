@@ -19,6 +19,8 @@ export function runMigrations(): void {
 
     CREATE TABLE IF NOT EXISTS email_queue (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      from_name TEXT,
+      from_address TEXT,
       to_address TEXT NOT NULL,
       cc TEXT,
       bcc TEXT,
@@ -72,6 +74,18 @@ export function runMigrations(): void {
     CREATE INDEX IF NOT EXISTS idx_email_logs_sent_at ON email_logs(sent_at);
     CREATE INDEX IF NOT EXISTS idx_daily_usage_date ON daily_usage(account_id, date);
   `);
+
+  // Migration: add from_name and from_address columns if they don't exist
+  const columns = db.prepare("PRAGMA table_info(email_queue)").all() as { name: string }[];
+  const columnNames = columns.map(c => c.name);
+  if (!columnNames.includes('from_name')) {
+    db.exec(`ALTER TABLE email_queue ADD COLUMN from_name TEXT`);
+    logger.info('Migration: added from_name column to email_queue');
+  }
+  if (!columnNames.includes('from_address')) {
+    db.exec(`ALTER TABLE email_queue ADD COLUMN from_address TEXT`);
+    logger.info('Migration: added from_address column to email_queue');
+  }
 
   logger.info('Database migrations completed');
 }

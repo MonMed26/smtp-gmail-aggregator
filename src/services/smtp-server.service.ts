@@ -81,22 +81,27 @@ class SmtpServerService {
       throw new Error('No recipients specified');
     }
 
+    // Extract original From name and address
+    const fromData = this.extractFrom(parsed.from);
+
     const subject = parsed.subject || '(no subject)';
     const html = parsed.html ? String(parsed.html) : undefined;
     const text = parsed.text || undefined;
     const replyTo = parsed.replyTo ? this.extractAddresses(parsed.replyTo).join(', ') : undefined;
 
-    logger.info(`SMTP received email: to=${toAddresses.join(', ')}, subject="${subject}"`);
+    logger.info(`SMTP received email: from="${fromData.name}" <${fromData.address}>, to=${toAddresses.join(', ')}, subject="${subject}"`);
 
     // Determine sending mode based on config
     if (config.smtpServer.mode === 'direct') {
       // Direct mode: send immediately without queue
-      await this.sendDirect(toAddresses, ccAddresses, bccAddresses, subject, html, text, replyTo);
+      await this.sendDirect(fromData, toAddresses, ccAddresses, bccAddresses, subject, html, text, replyTo);
     } else {
       // Queue mode: add to queue for background processing
       for (const to of toAddresses) {
         EmailQueueModel.enqueue({
           to,
+          fromName: fromData.name || undefined,
+          fromAddress: fromData.address || undefined,
           cc: ccAddresses.length > 0 ? ccAddresses.join(', ') : undefined,
           bcc: bccAddresses.length > 0 ? bccAddresses.join(', ') : undefined,
           subject,
@@ -111,6 +116,7 @@ class SmtpServerService {
   }
 
   private async sendDirect(
+    fromData: { name: string | null; address: string | null },
     toAddresses: string[],
     ccAddresses: string[],
     bccAddresses: string[],
@@ -126,10 +132,11 @@ class SmtpServerService {
       throw new Error('No available accounts with remaining quota');
     }
 
+    // Use original From if provided, otherwise fall back to account info
     const result = await smtpPool.sendEmail(account, {
       from: {
-        name: account.display_name || account.email.split('@')[0],
-        address: account.email,
+        name: fromData.name || account.display_name || account.email.split('@')[0],
+        address: fromData.address || account.email,
       },
       to: toAddresses.join(', '),
       cc: ccAddresses.length > 0 ? ccAddresses.join(', ') : undefined,
@@ -162,6 +169,29 @@ class SmtpServerService {
       });
       throw new Error(`Send failed: ${result.error}`);
     }
+  }
+
+  private extractFrom(field: any): { name: string | null; address: string | null } {
+    if (!field) return { name: null, address: null };
+
+    if (field.value && Array.isArray(field.value) && field.value.length > 0) {
+      const first = field.value[0];
+      return {
+        name: first.name || null,
+        address: first.address || null,
+      };
+    }
+
+    if (field.text) {
+      // Parse "Name <email>" format
+      const match = field.text.match(/^"?([^"<]*)"?\s*<?([^>]*)>?$/);
+      if (match) {
+        return { name: match[1].trim() || null, address: match[2].trim() || null };
+      }
+      return { name: null, address: field.text };
+    }
+
+    return { name: null, address: null };
   }
 
   private extractAddresses(field: any): string[] {

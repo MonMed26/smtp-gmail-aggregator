@@ -16,6 +16,9 @@ import statsRoutes from './routes/api/stats.routes';
 
 const app = express();
 
+// Trust proxy (for Coolify / reverse proxy setups)
+app.set('trust proxy', 1);
+
 // View engine
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'views'));
@@ -29,8 +32,12 @@ app.use(helmet({
       scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
       imgSrc: ["'self'", "data:"],
+      connectSrc: ["'self'"],
+      formAction: ["'self'"],
     },
   },
+  crossOriginOpenerPolicy: false,
+  originAgentCluster: false,
 }));
 
 // Body parsing
@@ -49,9 +56,10 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: !config.isDev,
+    secure: false, // Set to true only if behind HTTPS-terminating reverse proxy
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    sameSite: 'lax',
   },
 }));
 
